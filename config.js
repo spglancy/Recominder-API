@@ -1,4 +1,4 @@
 module.exports = {
     "port": process.env.PORT || 3000,
-    "mongoURL": 'mongodb://admin:qwaszx51@ds115595.mlab.com:15595/reddit-clone'
+    "mongoURL": 'mongodb://admin:qwaszx51@ds029827.mlab.com:29827/spd'
 }

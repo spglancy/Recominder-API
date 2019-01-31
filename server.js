@@ -5,30 +5,53 @@ const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const config = require('./config')
-const postController = require('./controllers/postController')
 const expressValidator = require('express-validator')
+const jwt = require('jsonwebtoken');
+const authController = require('./controllers/authController')
+var cookieParser = require('cookie-parser');
 
-mongoose.connect(config.mongoURL, { useNewUrlParser: true })
-    .catch(err => {
-        throw err
-    })
-
-app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'handlebars')
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(expressValidator())
 app.use(methodOverride('_method'))
+app.use(express.static(__dirname + '/public'))
+app.use(cookieParser());
 
-app.use('/', postController)
 
-app.get('/', (req, res) => {
-    res.render('home');
+var checkAuth = (req, res, next) => {
+    console.log("Checking authentication");
+    if (typeof req.cookies.nToken === "undefined" || req.cookies.nToken === null) {
+      req.user = null;
+    } else {
+      var token = req.cookies.nToken;
+      var decodedToken = jwt.decode(token, { complete: true }) || {};
+      req.user = decodedToken.payload;
+    }
+      
+    next();
+};
+app.use(checkAuth);
+
+mongoose.connect(config.mongoURL, { useNewUrlParser: true })
+.catch(err => {
+    throw err
 })
 
-app.get('/post-new', (req, res) => {
-    res.render('new-post')
+app.use('/api/auth', authController)
+
+app.get('/', (req, res) => {
+    const currentUser = req.user;
+    if(currentUser){
+        res.redirect(`/home/${req.user._id}`)
+    }
+    res.redirect('/api/auth/signup')
+})
+
+app.get('/home/:id', (req, res) => {
+    res.render('home')
 })
 
 app.listen(config.port, () => {
