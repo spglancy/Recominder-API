@@ -39,6 +39,10 @@ router.post('/register', (req, res) => {
     });
 });
 
+router.post('/data', (req, res) => {
+    res.send(req.body)
+});
+
 // clears cookie
 router.get('/logout', (req, res) => {
     res.clearCookie('nToken');
