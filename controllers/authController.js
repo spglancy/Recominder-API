@@ -33,6 +33,7 @@ router.get('/login', (req, res) => {
 router.post('/register', (req, res) => {
     const email = req.body.email
     var user = new User(req.body)
+    user.email = user.email.toLowerCase()
     User.findOne({ email }).then(check => {
         if(!check){
             user.save().then((user) => {
