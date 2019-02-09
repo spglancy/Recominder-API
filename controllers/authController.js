@@ -31,9 +31,9 @@ router.get('/login', (req, res) => {
  */
 
 router.post('/register', (req, res) => {
-    const email = req.body.email
     var user = new User(req.body)
     user.email = user.email.toLowerCase()
+    const email = user.email
     User.findOne({ email }).then(check => {
         if(!check){
             user.save().then((user) => {
@@ -56,7 +56,7 @@ router.get('/logout', (req, res) => {
 
 // checks user auth and logs in
 router.post("/login", (req, res) => {
-    const email = req.body.email
+    const email = req.body.email.toLowerCase()
     const password = req.body.password
     // Find this user name
     User.findOne({ email }, "email password")
@@ -103,7 +103,7 @@ router.post('/mobile-data', (req, res) => {
 
 // checks user auth and logs in
 router.post("/mobile-login", (req, res) => {
-    const email = req.body.email
+    const email = req.body.email.toLowerCase()
     const password = req.body.password
     // Find this user name
     User.findOne({ email }, "email password")
@@ -139,6 +139,7 @@ router.post("/mobile-login", (req, res) => {
 router.post('/mobile-register', (req, res) => {
     const email = req.body.email
     var user = new User(req.body)
+    user.email = user.email.toLowerCase()
     User.findOne({ email }).then(check => {
         if(!check){
             user.save().then((user) => {
