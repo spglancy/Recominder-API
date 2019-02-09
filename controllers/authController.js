@@ -93,7 +93,7 @@ router.post("/login", (req, res) => {
 // Mobile Routes
 
 //saving HealthKit data from mobile app and echoing it back
-router.post('/data', (req, res) => {
+router.post('/mobile-data', (req, res) => {
     const data = new Data(req.body)
     data.save().then((data) => {
         res.send(data)
