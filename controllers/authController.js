@@ -47,10 +47,10 @@ router.post('/register', (req, res) => {
     
 })
 
-//echos inputs
+//saving HealthKit data from mobile app and echoing it back
 router.post('/data', (req, res) => {
-    var data = new Data(req.body)
-    Data.save().then((data) => {
+    const data = new Data(req.body)
+    data.save().then((data) => {
         res.send(data)
     })
 })
