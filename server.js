@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
     if (currentUser) {
         res.redirect(`/home/${req.user._id}`)
     }
-    res.redirect('/api/auth/signup')
+    res.redirect('/signup')
 })
 
 app.get('/home/:id', (req, res) => {
