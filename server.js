@@ -10,16 +10,11 @@ const jwt = require('jsonwebtoken');
 const authController = require('./controllers/authController')
 var cookieParser = require('cookie-parser');
 
-app.set('view engine', 'handlebars')
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(expressValidator())
 app.use(methodOverride('_method'))
-app.use(express.static(__dirname + '/public'))
 app.use(cookieParser());
-
 
 var checkAuth = (req, res, next) => {
     console.log("Authenticating");
@@ -41,18 +36,6 @@ mongoose.connect(config.mongoURL, { useNewUrlParser: true })
     })
 
 app.use('/', authController)
-
-app.get('/', (req, res) => {
-    const currentUser = req.user;
-    if (currentUser) {
-        res.redirect(`/home/${req.user._id}`)
-    }
-    res.redirect('/signup')
-})
-
-app.get('/home/:id', (req, res) => {
-    res.render('home')
-})
 
 app.listen(config.port, () => {
     console.log(`App running on port ${config.port}`)
