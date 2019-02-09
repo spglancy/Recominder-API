@@ -59,17 +59,17 @@ router.post('/register', (req, res) => {
     User.findOne({ email }).then(check => {
         if(!check){
             user.save().then((user) => {
+                var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
                 return res.send({ 
                     status: "Success",
-                    userId: user._id
+                    userId: user._id,
+                    token: token
                 })
             })
         } else {
-            var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
             return res.send({
                 status: "Unsuccessful",
                 message: "This Email is already in use",
-                token: token
             })  
       }
     })
