@@ -40,7 +40,7 @@ mongoose.connect(config.mongoURL, { useNewUrlParser: true })
         throw err
     })
 
-app.use('/api/auth', authController)
+app.use('/', authController)
 
 app.get('/', (req, res) => {
     const currentUser = req.user;
