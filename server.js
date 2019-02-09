@@ -22,29 +22,29 @@ app.use(cookieParser());
 
 
 var checkAuth = (req, res, next) => {
-    console.log("Checking authentication");
+    console.log("Authenticating");
     if (typeof req.cookies.nToken === "undefined" || req.cookies.nToken === null) {
-      req.user = null;
+        req.user = null;
     } else {
-      var token = req.cookies.nToken;
-      var decodedToken = jwt.decode(token, { complete: true }) || {};
-      req.user = decodedToken.payload;
+        var token = req.cookies.nToken;
+        var decodedToken = jwt.decode(token, { complete: true }) || {};
+        req.user = decodedToken.payload;
     }
-      
+
     next();
 };
 app.use(checkAuth);
 
 mongoose.connect(config.mongoURL, { useNewUrlParser: true })
-.catch(err => {
-    throw err
-})
+    .catch(err => {
+        throw err
+    })
 
 app.use('/api/auth', authController)
 
 app.get('/', (req, res) => {
     const currentUser = req.user;
-    if(currentUser){
+    if (currentUser) {
         res.redirect(`/home/${req.user._id}`)
     }
     res.redirect('/api/auth/signup')

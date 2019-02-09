@@ -1,20 +1,21 @@
-const dotenv = require('dotenv').config();
-const express = require('express');
-const router = express.Router();
-const User = require('../models/user.js');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv').config()
+const express = require('express')
+const router = express.Router()
+const User = require('../models/user.js')
+const jwt = require('jsonwebtoken')
+const Data = require('../models/data')
+const bcrypt = require('bcryptjs')
+const cookieParser = require('cookie-parser')
 
 /**
  * Renders Signup template
  */
 router.get('/signup', (req, res) => {
-    const x = req.nToken;
+    const x = req.nToken
     if (x) {
         res.redirect(`/home/${x._id}`)
     }
-    res.render('signup');
+    res.render('signup')
 })
 
 /**
@@ -22,7 +23,7 @@ router.get('/signup', (req, res) => {
  */
 
 router.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login')
 })
 
 /**
@@ -30,54 +31,96 @@ router.get('/login', (req, res) => {
  */
 
 router.post('/register', (req, res) => {
-    var user = new User(req.body);
-    user.save().then((user) => {
-        var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" });
-        res.cookie('nToken', token, { maxAge: 900000, httpOnly: true });
-        res.redirect(`/home/${user._id}`);
-    });
-});
+    const email = req.body.email
+    var user = new User(req.body)
+    User.findOne({ email }).then(check => {
+        if(!check){
+            user.save().then((user) => {
+                var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
+                res.cookie('nToken', token, { maxAge: 900000, httpOnly: true })
+                res.redirect(`/home/${user._id}`)
+            })
+        } else {
+            res.send("This Email is already in use")
+        }
+    })
+    
+})
 
 //echos inputs
 router.post('/data', (req, res) => {
-    res.send(req.body)
-});
+    var data = new Data(req.body)
+    Data.save().then((data) => {
+        res.send(data)
+    })
+})
 
 // clears cookie
 router.get('/logout', (req, res) => {
-    res.clearCookie('nToken');
-    res.redirect('/');
-});
+    res.clearCookie('nToken')
+    res.redirect('/')
+})
 
 // checks user auth and logs in
 router.post("/login", (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
+    const email = req.body.email
+    const password = req.body.password
     // Find this user name
     User.findOne({ email }, "email password")
         .then(user => {
             if (!user) {
                 // User not found
-                return res.status(401).send({ message: "Wrong Email or Password" });
+                return res.status(401).send({ message: "Wrong Email or Password" })
             }
             // Check the password
             user.comparePassword(password, (err, isMatch) => {
                 if (!isMatch) {
                     // Password does not match
-                    return res.status(401).send({ message: "Wrong Email or Password" });
+                    return res.status(401).send({ message: "Wrong Email or Password" })
                 }
                 // Create a token
                 const token = jwt.sign({ _id: user._id, email: user.email, name: user.name }, process.env.SECRET, {
                     expiresIn: "60 days"
-                });
+                })
                 // Set a cookie and redirect to root
-                res.cookie("nToken", token, { maxAge: 900000, httpOnly: true });
-                res.redirect(`/home/${user._id}`);
-            });
+                res.cookie("nToken", token, { maxAge: 900000, httpOnly: true })
+                res.redirect(`/home/${user._id}`)
+            })
         })
         .catch(err => {
-            console.log(err);
-        });
-});
+            console.log(err)
+        })
+})
 
-module.exports = router;
+//for timo testing
+router.post("/testlogin", (req, res) => {
+    const email = req.body.email
+    const password = req.body.password
+    // Find this user name
+    User.findOne({ email }, "email password")
+        .then(user => {
+            if (!user) {
+                // User not found
+                return res.status(401).send({ message: "Wrong Email or Password" })
+            }
+            // Check the password
+            user.comparePassword(password, (err, isMatch) => {
+                if (!isMatch) {
+                    // Password does not match
+                    return res.status(401).send({ message: "Wrong Email or Password" })
+                }
+                // Create a token
+                const token = jwt.sign({ _id: user._id, email: user.email, name: user.name }, process.env.SECRET, {
+                    expiresIn: "60 days"
+                })
+                // Set a cookie and redirect to root
+                res.cookie("nToken", token, { maxAge: 900000, httpOnly: true })
+                res.send("login successful!")
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+
+module.exports = router
