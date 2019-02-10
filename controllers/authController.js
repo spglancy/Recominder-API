@@ -59,6 +59,7 @@ router.post('/register', (req, res) => {
     User.findOne({ email }).then(check => {
         if(!check){
             user.save().then((user) => {
+                // creating token for web based clients
                 var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
                 return res.send({ 
                     status: "Success",
