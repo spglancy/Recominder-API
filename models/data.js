@@ -12,7 +12,14 @@ const dataSchema = new Schema({
     leanBodyMassData: Object,
     respiratoryRateData: Object,
     restingHeartRateData: Object,
-    stepCountData: Object
+    stepCountData: Object,
+    createdAt: { type: Date }
 });
+
+dataSchema.pre("save", function(next) {
+    //setting the createdAt date
+    this.updatedAt = new Date();
+   next();
+  });
 
 module.exports = mongoose.model("Data", dataSchema);
