@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const dataSchema = new Schema({
-    email: String,
+    email: Object,
     heartRateData: Object,
     heightData: Object,
     bloodPressureSystolicData: Object,
@@ -14,7 +14,6 @@ const dataSchema = new Schema({
     respiratoryRateData: Object,
     restingHeartRateData: Object,
     stepCountData: Object,
-    createdAt: { type: Date }
 });
 
 dataSchema.pre("save", function(next) {
