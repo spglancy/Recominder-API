@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser')
 router.post('/data', (req, res) => {
     const data = new Data(req.body)
     data.save().then((data) => {
-        res.send({ "asdf": "jasdfas" })
+        res.json(data)
     })
 })
 
