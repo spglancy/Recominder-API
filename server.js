@@ -6,9 +6,7 @@ const config = require('./config')
 const authController = require('./controllers/authController')
 var cookieParser = require('cookie-parser');
 
-//possible fix for unresponsive data
-app.use(express.bodyParser({limit: '50mb'}))
-app.use(express.json())
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser());
 
