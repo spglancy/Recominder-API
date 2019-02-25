@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const config = require('./config')
 const authController = require('./controllers/authController')
-var cookieParser = require('cookie-parser');
+let cookieParser = require('cookie-parser');
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
