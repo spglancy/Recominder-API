@@ -9,11 +9,10 @@ const cookieParser = require('cookie-parser')
 
 //saving HealthKit data from mobile app and echoing it back
 router.post('/data', (req, res) => {
-    // const data = new Data(req.body)
-    // data.save().then((data) => {
-    //     res.json(data)
-    // })
-    res.send("Its connecting")
+    const data = new Data(req.body)
+    data.save().then((data) => {
+        res.json(data)
+    })
 })
 
 // checks user auth and logs in
