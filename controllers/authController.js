@@ -54,7 +54,9 @@ router.post("/login", (req, res) => {
 
 // Register route for mobile, will return success or error messages and create users
 router.post('/register', (req, res) => {
-    console.log(req.body)
+    console.log(req.body.email)
+    console.log(req.body.password)
+    console.log(req.body.passwordConf)
     const email = req.body.email
     const pwd = req.body.password
     const pwdconf = req.body.passwordConf
