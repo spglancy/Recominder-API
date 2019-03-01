@@ -25,7 +25,7 @@ router.post("/login", (req, res) => {
         .then(user => {
             if (!user) {
                 // User not found
-                return res.status(401).send({ 
+                return res.status(401).json({ 
                     Status: "Unsuccessful",
                     message: "Wrong Email or Password" 
                  })
@@ -34,13 +34,13 @@ router.post("/login", (req, res) => {
             user.comparePassword(password, (err, isMatch) => {
                 if (!isMatch) {
                     // Password does not match
-                    return res.status(401).send({ 
+                    return res.status(401).json({ 
                         result: "Unsuccessful",
                         message: "Wrong Email or Password" 
                      })
                 }
                 var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
-                return res.status(200).send({
+                return res.status(200).json({
                     result: "Success",
                     userId: user._id,
                     token: token
@@ -54,6 +54,7 @@ router.post("/login", (req, res) => {
 
 // Register route for mobile, will return success or error messages and create users
 router.post('/register', (req, res) => {
+    console.log(req.body)
     const email = req.body.email
     const pwd = req.body.password
     const pwdconf = req.body.passwordConf
@@ -68,17 +69,22 @@ router.post('/register', (req, res) => {
             user.save().then((user) => {
                 // creating token for web based clients
                 var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
-                return res.send({ 
+                 console.log(
+                     res.json({ 
                     result: "Success",
                     userId: user._id,
                     token: token
                 })
+                )
             })
         } else {
-            return res.send({
-                result: "Unsuccessful",
-                message: "This Email is already in use",
-            })  
+            console.log(
+                res.json({
+                    result: "Unsuccessful",
+                    message: "This Email is already in use",
+                })  
+            )
+             
       }
     })
 })
