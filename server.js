@@ -4,11 +4,13 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const config = require('./config')
 const authController = require('./controllers/authController')
-let cookieParser = require('cookie-parser');
+const cors = require('cors')
+let cookieParser = require('cookie-parser')
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(cookieParser());
+app.use(cors())
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
+app.use(cookieParser())
 
 mongoose.connect(config.mongoURL, { useNewUrlParser: true })
     .catch(err => {

@@ -5,7 +5,6 @@ const User = require('../models/user.js')
 const jwt = require('jsonwebtoken')
 const Data = require('../models/data')
 const bcrypt = require('bcryptjs')
-const cookieParser = require('cookie-parser')
 
 //saving HealthKit data from mobile app and echoing it back
 router.post('/data', (req, res) => {
@@ -36,13 +35,13 @@ router.post("/login", (req, res) => {
                 if (!isMatch) {
                     // Password does not match
                     return res.status(401).send({ 
-                        Status: "Unsuccessful",
+                        result: "Unsuccessful",
                         message: "Wrong Email or Password" 
                      })
                 }
                 var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
                 return res.status(200).send({
-                    Status: "Successful",
+                    result: "Success",
                     userId: user._id,
                     token: token
                 })
@@ -56,7 +55,13 @@ router.post("/login", (req, res) => {
 // Register route for mobile, will return success or error messages and create users
 router.post('/register', (req, res) => {
     const email = req.body.email
-    var user = new User(req.body)
+    const pwd = req.body.password
+    const pwdconf = req.body.passwordConf
+    if(pwd === pwdconf){
+        var user = new User(req.body)
+    } else {
+        return res.send({message: "Passwords do not match"})
+    }
     user.email = user.email.toLowerCase()
     User.findOne({ email }).then(check => {
         if(!check){
@@ -64,14 +69,14 @@ router.post('/register', (req, res) => {
                 // creating token for web based clients
                 var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
                 return res.send({ 
-                    status: "Success",
+                    result: "Success",
                     userId: user._id,
                     token: token
                 })
             })
         } else {
             return res.send({
-                status: "Unsuccessful",
+                result: "Unsuccessful",
                 message: "This Email is already in use",
             })  
       }
