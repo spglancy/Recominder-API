@@ -71,22 +71,17 @@ router.post('/register', (req, res) => {
             user.save().then((user) => {
                 // creating token for web based clients
                 var token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" })
-                 console.log(
-                     res.json({ 
+                res.json({ 
                     result: "Success",
                     userId: user._id,
                     token: token
                 })
-                )
             })
         } else {
-            console.log(
-                res.json({
-                    result: "Unsuccessful",
-                    message: "This Email is already in use",
-                })  
-            )
-             
+            res.json({
+                result: "Unsuccessful",
+                message: "This Email is already in use",
+            })  
       }
     })
 })

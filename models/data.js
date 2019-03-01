@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const dataSchema = new Schema({
     // get Timo to send user email for referencing data
-    email: Object,
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
     heartRateData: Object,
     heightData: Object,
     bloodPressureSystolicData: Object,
@@ -15,11 +15,12 @@ const dataSchema = new Schema({
     respiratoryRateData: Object,
     restingHeartRateData: Object,
     stepCountData: Object,
+    createdAt: Date
 });
 
 dataSchema.pre("save", function(next) {
     //setting the createdAt date
-    this.updatedAt = new Date();
+    this.createdAt = new Date();
    next();
   });
 
