@@ -7,6 +7,7 @@ const authController = require('./controllers/authController')
 const cors = require('cors')
 let cookieParser = require('cookie-parser')
 
+// cors protocols? fix I dont understand fully
 app.use(cors())
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
