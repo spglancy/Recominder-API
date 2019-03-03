@@ -6,22 +6,11 @@ const dataSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: "User" },
     heartRateData: Object,
     heightData: Object,
-    bloodPressureSystolicData: Object,
-    bloodPressureDiastolicData: Object,
     bodyMassData: Object,
-    bodyTemperatureData: Object,
     activeEnergyBurnedData: Object,
-    leanBodyMassData: Object,
-    respiratoryRateData: Object,
+    distanceWalkingRunning: Object,
     restingHeartRateData: Object,
     stepCountData: Object,
-    createdAt: Date
-});
-
-dataSchema.pre("save", function(next) {
-    //setting the createdAt date
-    this.createdAt = new Date();
-   next();
-  });
+})
 
 module.exports = mongoose.model("Data", dataSchema);
