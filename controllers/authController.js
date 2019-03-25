@@ -8,12 +8,26 @@ const bcrypt = require('bcryptjs')
 
 //saving HealthKit data from mobile app and echoing it back
 router.post('/data', (req, res) => {
-    const data = new Data(req.body)
-    data.save().then((data) => {
-        res.json(data)
-    }).catch((err) => {
-        res.send(err)
-    })
+    Data.findOne({ userId: req.body.userId })
+        .then(data => {
+            if(data) {
+                data.heartRateData = req.body.heartRateData
+                data.heightData = req.body.heightData
+                data.bodyMassData = req.body.bodyMassData
+                data.activeEnergyBurnedData = req.body.activeEnergyBurnedData
+                data.distanceWalkingRunning = req.body.distanceWalkingRunning
+                data.restingHeartRateData = req.body.restingHeartRateData
+                data.stepCountData = req.body.stepCountData
+            } else {
+                data = new Data(req.body)
+            }
+            data.save().then((data) => {
+                res.json(data)
+            }).catch((err) => {
+                res.send(err)
+            })
+        })
+
 })
 
 // checks user auth and logs in
